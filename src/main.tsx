@@ -7,6 +7,7 @@ import './index.css';
 // Routes
 import LandingPage from './app/routes/_index';
 import AppLayout from './app/routes/_app';
+import DashboardPage from './app/routes/dashboard';
 import BrainPage from './app/routes/brain';
 import RoomsPage from './app/routes/rooms';
 import SkillsPage from './app/routes/skills';
@@ -30,7 +31,11 @@ const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <Navigate to="/app/brain" replace />, // Default to Brain for now
+        element: <Navigate to="/app/dashboard" replace />,
+      },
+      {
+        path: 'dashboard',
+        element: <DashboardPage />,
       },
       {
         path: 'brain',

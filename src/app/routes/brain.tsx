@@ -1,5 +1,6 @@
 import { GlassCard } from "../../components/ui/GlassCard";
 import { ChatInterface } from "../../features/brain/ChatInterface";
+import { DocumentUpload } from "../../features/documents/upload/DocumentUpload";
 
 export default function BrainPage() {
     return (
@@ -14,16 +15,13 @@ export default function BrainPage() {
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                {/* Knowledge Graph / Documents Space (Placeholder for now) */}
-                <GlassCard className="lg:col-span-1 h-[600px] flex flex-col">
-                    <h3 className="text-lg font-bold text-white mb-4">Knowledge Base</h3>
-                    <div className="flex-1 bg-white/5 rounded-xl flex items-center justify-center border border-white/5 border-dashed">
-                        <p className="text-gray-500 text-sm">Document RAG Index (Empty)</p>
-                    </div>
-                </GlassCard>
+                {/* Knowledge Graph / Documents Space */}
+                <div className="lg:col-span-1 h-[600px]">
+                    <DocumentUpload />
+                </div>
 
                 {/* Chat Interface */}
-                <GlassCard className="lg:col-span-2">
+                <GlassCard className="lg:col-span-2 h-[600px] flex flex-col">
                     <ChatInterface />
                 </GlassCard>
             </div>

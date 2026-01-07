@@ -1,6 +1,13 @@
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Send, Bot, User, Paperclip, AlertCircle } from "lucide-react";
+import ReactMarkdown from 'react-markdown';
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import remarkGfm from 'remark-gfm';
+import { Mermaid } from "../../components/ui/Mermaid";
+import { QuizCard } from "../../components/quiz/QuizCard";
+import { type QuizQuestion } from "../../types/quiz";
 
 import { GlassInput } from "../../components/ui/GlassInput";
 import { GlassButton } from "../../components/ui/GlassButton";
@@ -91,17 +98,7 @@ export function ChatInterface() {
         }
     };
 
-    // Simple markdown-like rendering for bold text
-    const renderMessageText = (text: string) => {
-        // Replace **text** with bold
-        const parts = text.split(/(\*\*[^*]+\*\*)/g);
-        return parts.map((part, index) => {
-            if (part.startsWith("**") && part.endsWith("**")) {
-                return <strong key={index}>{part.slice(2, -2)}</strong>;
-            }
-            return part;
-        });
-    };
+
 
     return (
         <div className="h-[600px] flex flex-col relative">
@@ -139,9 +136,55 @@ export function ChatInterface() {
                                     : "bg-emerald-500/10 border border-emerald-500/20 text-emerald-100 rounded-tr-none"
                                     }`}
                             >
-                                <p className="text-sm leading-relaxed whitespace-pre-wrap">
-                                    {renderMessageText(msg.text)}
-                                </p>
+                                <div className="text-sm leading-relaxed prose prose-invert max-w-none">
+                                    {msg.sender === "ai" ? (
+                                        <ReactMarkdown
+                                            remarkPlugins={[remarkGfm]}
+                                            components={{
+                                                code({ node, inline, className, children, ...props }: any) {
+                                                    const match = /language-(\w+)/.exec(className || '')
+                                                    const isMermaid = match && match[1] === 'mermaid';
+                                                    const isJson = match && match[1] === 'json';
+
+                                                    if (!inline && isMermaid) {
+                                                        return <Mermaid chart={String(children).replace(/\n$/, '')} />;
+                                                    }
+
+                                                    if (!inline && isJson) {
+                                                        try {
+                                                            const content = String(children).replace(/\n$/, '');
+                                                            const data = JSON.parse(content);
+                                                            if (data.question && data.options && typeof data.correctIndex === 'number') {
+                                                                return <QuizCard quiz={data as QuizQuestion} />;
+                                                            }
+                                                        } catch (e) {
+                                                            // Not valid JSON or not a quiz, fall through to code block
+                                                        }
+                                                    }
+
+                                                    return !inline && match ? (
+                                                        <SyntaxHighlighter
+                                                            {...props}
+                                                            style={vscDarkPlus}
+                                                            language={match[1]}
+                                                            PreTag="div"
+                                                        >
+                                                            {String(children).replace(/\n$/, '')}
+                                                        </SyntaxHighlighter>
+                                                    ) : (
+                                                        <code {...props} className={className}>
+                                                            {children}
+                                                        </code>
+                                                    )
+                                                }
+                                            }}
+                                        >
+                                            {msg.text}
+                                        </ReactMarkdown>
+                                    ) : (
+                                        <p className="whitespace-pre-wrap">{msg.text}</p>
+                                    )}
+                                </div>
                                 <span className="text-[10px] text-gray-500 mt-2 block">
                                     {msg.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                                 </span>
@@ -199,4 +242,3 @@ export function ChatInterface() {
         </div>
     );
 }
-

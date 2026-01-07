@@ -1,0 +1,341 @@
+# Synapse Architecture Brainstorming: RAG Integration & Framework Analysis
+
+## Reference Framework Analysis
+
+The uploaded framework shows a sophisticated **4-layer** AI application architecture. Let's break it down:
+
+![Reference Framework](C:/Users/ItzP/.gemini/antigravity/brain/bf0d8adf-996f-43f1-94b3-70de11ee234e/uploaded_image_1767640209325.png)
+
+---
+
+## Layer-by-Layer Breakdown (Reference - Preserved)
+
+### Layer 1: Input/Output
+| Component | Purpose |
+|-----------|---------|
+| **User Query** | Entry point for all interactions |
+| **Structured Response** | Output formatting |
+
+### Layer 2: Agent Modules (The "Brain")
+| Module | Purpose |
+|--------|---------|
+| **Smart Solver** | Analysis loops (Investigate → Note → Plan → Solve → Check) |
+| **Question Generator** | Generate learning questions in Custom/Mimic modes |
+| **Deep Research** | Dynamic topic queue with Plan → Research → Report |
+| **Guided Learning** | Locate → Visualize → Chat → Summarize |
+| **Interactive IdeaGen** | RAG/Web context with EditAgent + NarratorAgent |
+| **Automated IdeaGen** | Filter → Explore → Output pipeline |
+
+### Layer 3: Tool Layer
+| Tool | Purpose |
+|------|---------|
+| **RAG (Hybrid Retrieval)** | Vector + keyword search |
+| **Web Search** | Real-time info |
+| **Paper Search** | Academic sources |
+| **Code Executor** | Python sandbox |
+| **Query Item** | Definition lookup |
+| **PDF Parser** | Structure extraction |
+
+### Layer 4: Knowledge & Memory
+| Component | Purpose |
+|-----------|---------|
+| **Knowledge Graph** | Entity-Relation (LightRAG) |
+| **Vector Store** | Embeddings + Semantic Search |
+| **Memory System** | Session state + Citations |
+
+---
+
+## Deep Dive: RAG + KT (Knowledge Tracing) Models
+
+### What is Knowledge Tracing (KT)?
+
+Knowledge Tracing predicts a student's **mastery level** of specific skills over time based on their interaction history. Combined with RAG, this creates a powerful personalized learning system.
+
+### RAG + KT Architecture (TutorLLM Approach)
+
+```
+┌──────────────────────────────────────────────────────────────────────────┐
+│                          RAG + KT Pipeline                                │
+├──────────────────────────────────────────────────────────────────────────┤
+│                                                                          │
+│  ┌─────────────┐    ┌─────────────┐    ┌─────────────┐    ┌──────────┐  │
+│  │  Student    │───▶│  KT Model   │───▶│  Mastery    │───▶│ Adaptive │  │
+│  │  History    │    │  (BKT/DKT)  │    │  State      │    │ Retrieval│  │
+│  └─────────────┘    └─────────────┘    └─────────────┘    └────┬─────┘  │
+│                                                                 │        │
+│                     ┌───────────────────────────────────────────┘        │
+│                     ▼                                                    │
+│  ┌─────────────┐    ┌─────────────┐    ┌─────────────┐    ┌──────────┐  │
+│  │  User Query │───▶│  Hybrid     │───▶│  Context +  │───▶│  LLM     │  │
+│  │             │    │  RAG        │    │  Mastery    │    │ Response │  │
+│  └─────────────┘    └─────────────┘    └─────────────┘    └──────────┘  │
+└──────────────────────────────────────────────────────────────────────────┘
+```
+
+### KT Model Options
+
+| Model | Description | Pros | Cons | Synapse Fit |
+|-------|-------------|------|------|-------------|
+| **BKT (Bayesian KT)** | Probabilistic skill mastery | Interpretable, simple | Limited features | ✅ Good for MVP |
+| **DKT (Deep KT)** | LSTM-based temporal | Better accuracy | Needs more data | ⚠️ Future |
+| **SPARFA** | Factor analysis | Captures skill relations | Complex | ❌ Overkill |
+| **AKT (Attn-based KT)** | Transformer-based | State-of-art accuracy | Resource heavy | ⚠️ Advanced |
+
+### My Recommendation: Start Simple, Scale Up
+
+```
+Phase 1: Skill-based filtering (rule-based "KT lite")
+    └─ Track skill unlocks, filter RAG by user's skill level
+    
+Phase 2: BKT implementation
+    └─ Bayesian probability of skill mastery
+    
+Phase 3: DKT/AKT (if data supports)
+    └─ Neural network-based prediction
+```
+
+**Reasoning**: True DKT needs substantial user interaction data. Start with rule-based skill gating that mimics KT behavior, then evolve.
+
+---
+
+## Competitive Edge: What Can Synapse Do BETTER?
+
+The reference framework is research-focused. Synapse is **learning-focused**. Here's where we can differentiate:
+
+### Feature Comparison Matrix
+
+| Feature | Reference Framework | **Synapse (Proposed)** | Edge |
+|---------|---------------------|------------------------|------|
+| Target User | Researchers | Students + Learners | More accessible |
+| Content Output | Text summaries | **Rich multimedia notes** | 🔥 Major differentiator |
+| Learning Style | Self-directed | **Socratic + Guided** | Pedagogically superior |
+| Progress Tracking | None visible | **Skill tree + XP** | Gamification |
+| Collaboration | Not shown | **Real-time rooms** | Social learning |
+| Diagrams | Not integrated | **Auto-generated visuals** | 🔥 |
+| Code Support | Python sandbox | **Multi-language + explain** | Broader appeal |
+
+---
+
+## Rich Content Generation: Notes & Guides
+
+### What "Rich Notes" Means for Synapse
+
+When a user asks about a topic, Synapse should generate **structured, visual, multi-format content**:
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  SYNAPSE RICH NOTE FORMAT                                                    │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                              │
+│  📚 TOPIC: Binary Search Trees                                               │
+│  ─────────────────────────────────────────────────────────────────────────  │
+│                                                                              │
+│  📖 THEORY SECTION                                                           │
+│  ├─ Definition (well-explained, Feynman technique)                          │
+│  ├─ Prerequisites (linked to user's skill tree)                             │
+│  └─ Real-world applications                                                 │
+│                                                                              │
+│  🎨 VISUAL AIDS                                                              │
+│  ├─ Concept Diagram (Mermaid/SVG auto-generated)                            │
+│  ├─ Flowchart (algorithm steps)                                             │
+│  └─ Mind Map (topic relationships)                                          │
+│                                                                              │
+│  💻 CODE SECTION                                                             │
+│  ├─ Syntax explanation (language-specific)                                  │
+│  ├─ Minimal example (copy-paste ready)                                      │
+│  ├─ Full implementation (collapsible)                                       │
+│  └─ Common pitfalls & edge cases                                            │
+│                                                                              │
+│  🧪 PRACTICE                                                                 │
+│  ├─ Quick Quiz (3-5 questions, adaptive difficulty)                         │
+│  └─ Coding challenge (optional)                                             │
+│                                                                              │
+│  📎 REFERENCES                                                               │
+│  └─ Citations from user's uploaded documents + external sources             │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+### Content Generation Tools We'll Integrate
+
+| Content Type | Generation Method | Technology |
+|--------------|-------------------|------------|
+| **Theory/Text** | LLM with Feynman prompt | OpenAI/Anthropic |
+| **Diagrams** | Mermaid.js syntax via LLM | LLM → Mermaid → Render |
+| **Flowcharts** | LLM-generated Mermaid/DOT | Same as above |
+| **Mind Maps** | Structured JSON → D3.js | LLM → JSON → Visual |
+| **Code Snippets** | Language-aware LLM | Syntax highlighting |
+| **Code Explanation** | Step-by-step annotation | LLM with code context |
+| **Quizzes** | LLM with Bloom's taxonomy | Adaptive difficulty |
+
+### Example: Auto-Generated Mermaid Diagram
+
+When user asks about "Binary Search Tree insertion", Synapse generates:
+
+```mermaid
+flowchart TD
+    A[Start: Insert Value] --> B{Tree Empty?}
+    B -->|Yes| C[Create Root Node]
+    B -->|No| D{Value < Current?}
+    D -->|Yes| E{Left Child Exists?}
+    D -->|No| F{Right Child Exists?}
+    E -->|Yes| G[Move to Left Child]
+    E -->|No| H[Insert as Left Child]
+    F -->|Yes| I[Move to Right Child]
+    F -->|No| J[Insert as Right Child]
+    G --> D
+    I --> D
+    C --> K[End]
+    H --> K
+    J --> K
+```
+
+---
+
+## Unique Synapse Features (Market Differentiators)
+
+### 1. **Socratic Mode** (Learning, not just answering)
+
+Instead of:
+> "A binary search tree is a data structure where..."
+
+Synapse asks:
+> "You've worked with arrays before. What's the main problem with searching in an unsorted array? 🤔"
+
+Then guides to the answer through questions.
+
+### 2. **Visual-First Learning**
+
+Every explanation comes with:
+- Auto-generated diagram
+- Step-by-step animation (future)
+- Interactive code playground (future)
+
+### 3. **Subject-Aware Formatting**
+
+| Subject | Synapse Auto-Includes |
+|---------|----------------------|
+| **Programming** | Code snippets, syntax, time/space complexity |
+| **Math** | LaTeX formulas, step-by-step proofs, graphs |
+| **Science** | Diagrams, equations, experimental setups |
+| **History** | Timelines, cause-effect flowcharts |
+| **Language** | Examples, etymology, usage contexts |
+
+### 4. **Skill Tree Integration**
+
+Notes are dynamically adjusted based on:
+- Skills already mastered (skip basics)
+- Skills locked (simplify explanations)
+- Learning goals (focus areas)
+
+### 5. **Collaborative Notes**
+
+In a Room, multiple users can:
+- Contribute to shared notes
+- See each other's highlights
+- Discuss in real-time
+
+---
+
+## Feature-by-Feature Implementation Plan
+
+### Development Workflow
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  FOR EACH FEATURE:                                                           │
+│                                                                              │
+│  1. Plan & Design ──▶ 2. Implement ──▶ 3. Browser Test ──▶ 4. Git Commit    │
+│         │                   │                │                    │         │
+│         ▼                   ▼                ▼                    ▼         │
+│  Create branch        Write code        Verify in        Push & merge       │
+│  + task update        + tests           localhost        to main/develop    │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+### Phase 1: Foundation Fixes (Immediate)
+
+| # | Feature | Scope | Est. Time |
+|---|---------|-------|-----------|
+| 1.1 | **Sidebar Fix** | Settings modal + Logout handler | 30 min |
+| 1.2 | **Vector Store Setup** | Enable pgvector, create embedding column | 1 hr |
+| 1.3 | **Document Upload** | Upload → Parse → Embed → Store | 2 hr |
+
+**Git commits after each sub-feature is verified in browser.**
+
+---
+
+### Phase 2: Core RAG Pipeline
+
+| # | Feature | Scope | Est. Time |
+|---|---------|-------|-----------|
+| 2.1 | **Vector Search Function** | Postgres function for similarity search | 1 hr |
+| 2.2 | **RAG Retrieval in Chat** | Query → Embed → Search → Context | 2 hr |
+| 2.3 | **LLM Integration** | Edge Function with OpenAI/Anthropic | 2 hr |
+| 2.4 | **Response Rendering** | Markdown + code highlighting | 1 hr |
+
+---
+
+### Phase 3: Rich Content Generation
+
+| # | Feature | Scope | Est. Time |
+|---|---------|-------|-----------|
+| 3.1 | **Mermaid Diagram Gen** | LLM prompt → Mermaid → Render | 2 hr |
+| 3.2 | **Code Snippet Formatting** | Language detection + syntax highlight | 1 hr |
+| 3.3 | **Theory Templates** | Subject-aware prompts | 2 hr |
+| 3.4 | **Quiz Generation** | LLM-generated questions + answer check | 3 hr |
+
+---
+
+### Phase 4: Knowledge Tracing (Lite)
+
+| # | Feature | Scope | Est. Time |
+|---|---------|-------|-----------|
+| 4.1 | **Skill Progress Tracking** | Track mastery %, unlock gates | 2 hr |
+| 4.2 | **Adaptive Retrieval** | Filter RAG by user skill level | 2 hr |
+| 4.3 | **XP & Achievements** | Gamification layer | 2 hr |
+
+---
+
+### Phase 5: Collaborative Features
+
+| # | Feature | Scope | Est. Time |
+|---|---------|-------|-----------|
+| 5.1 | **Real-time Rooms** | Supabase Realtime for presence | 3 hr |
+| 5.2 | **Shared Notes** | Collaborative editing | 4 hr |
+| 5.3 | **Room Knowledge Base** | Per-room document context | 2 hr |
+
+---
+
+### Phase 6: Advanced AI (Future)
+
+| # | Feature | Scope | Est. Time |
+|---|---------|-------|-----------|
+| 6.1 | **Socratic Agent** | Question-guided learning | 4 hr |
+| 6.2 | **GraphRAG** | Knowledge graph for multi-hop queries | 8 hr |
+| 6.3 | **Full KT Model** | BKT/DKT implementation | 8 hr |
+
+---
+
+## Summary: Synapse vs Reference
+
+| Aspect | Reference | **Synapse** |
+|--------|-----------|-------------|
+| **Core** | Research assistant | **Learning companion** |
+| **Output** | Text | **Rich multimedia** |
+| **Interaction** | Command-response | **Socratic dialogue** |
+| **Progress** | None | **Skill tree + XP** |
+| **Collaboration** | Single user | **Real-time rooms** |
+| **Personalization** | Static | **Adaptive (KT-lite)** |
+
+---
+
+## Questions Remaining
+
+1. **Supabase pgvector**: Can you confirm access? (Free tier supports with setup)
+2. **LLM Provider**: OpenAI API key ready, or should we explore alternatives?
+3. **First Phase Start**: Ready to begin Phase 1 (Sidebar + Vector Store)?
+
+> [!IMPORTANT]
+> **Workflow confirmed**: Feature → Browser Test → Git Commit → Next Feature.  
+> No implementation until you approve this plan.
+
