@@ -1,18 +1,53 @@
-import { Outlet } from "react-router-dom";
+import { useState } from "react";
+import { Outlet, Navigate, useLocation } from "react-router-dom";
 import { Sidebar } from "../../components/navigation/Sidebar";
+import { useAuthStore } from "../../stores/useAuthStore";
+import { Loader2 } from "lucide-react";
+import { motion } from "framer-motion";
 
 export default function AppLayout() {
-    return (
-        <div className="min-h-screen bg-black text-white selection:bg-emerald-500/30">
-            <Sidebar />
-            <main className="pl-64 min-h-screen relative">
-                {/* Background Beams/Effects could go here */}
-                <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 pointer-events-none" />
+    const { session, isLoading } = useAuthStore();
+    const location = useLocation();
+    const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
 
-                <div className="p-8 max-w-7xl mx-auto pt-12">
+    if (isLoading) {
+        return (
+            <div className="min-h-screen bg-[var(--bg-primary)] flex items-center justify-center">
+                <Loader2 className="w-8 h-8 text-[var(--accent-primary)] animate-spin" />
+            </div>
+        );
+    }
+
+    if (!session) {
+        return <Navigate to="/login" state={{ from: location }} replace />;
+    }
+
+    return (
+        <div className="min-h-screen bg-[var(--bg-primary)] text-[var(--text-primary)] selection:bg-[var(--accent-primary)] selection:text-white relative overflow-hidden">
+            {/* Ambient Background Gradient (Subtle) */}
+            <div className="fixed inset-0 z-0 pointer-events-none">
+                <div className="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] rounded-full bg-[var(--accent-primary)] opacity-[0.03] blur-[120px]" />
+                <div className="absolute bottom-[-20%] right-[-10%] w-[50%] h-[50%] rounded-full bg-[var(--accent-tertiary)] opacity-[0.03] blur-[120px]" />
+            </div>
+
+            <Sidebar
+                isCollapsed={isSidebarCollapsed}
+                onToggle={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
+            />
+
+            <motion.main
+                initial={false}
+                animate={{ paddingLeft: isSidebarCollapsed ? 72 : 256 }}
+                transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                className="min-h-screen relative z-10"
+            >
+                {/* Paper Texture Overlay */}
+                <div className="absolute inset-0 bg-paper opacity-50 pointer-events-none mix-blend-overlay" />
+
+                <div className="p-8 max-w-7xl mx-auto pt-10 animate-in fade-in slide-in-from-bottom-4 duration-700">
                     <Outlet />
                 </div>
-            </main>
+            </motion.main>
         </div>
     );
 }

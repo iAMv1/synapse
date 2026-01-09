@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { GlassCard } from '../ui/GlassCard';
+import { SynapseCard } from '../ui/SynapseCard';
 import { CheckCircle2, XCircle } from 'lucide-react';
 import { clsx } from 'clsx';
 import { motion } from 'framer-motion';
@@ -23,7 +23,7 @@ export const QuizCard: React.FC<QuizCardProps> = ({ quiz, onComplete }) => {
     };
 
     return (
-        <GlassCard className="p-6 my-4 border-l-4 border-l-emerald-500">
+        <SynapseCard className="p-6 my-4 border-l-4 border-l-emerald-500">
             <h3 className="text-lg font-bold text-white mb-4">Pop Quiz</h3>
             <p className="text-white/90 mb-6 text-lg">{quiz.question}</p>
 
@@ -66,6 +66,6 @@ export const QuizCard: React.FC<QuizCardProps> = ({ quiz, onComplete }) => {
                     <strong>Explanation:</strong> {quiz.explanation}
                 </motion.div>
             )}
-        </GlassCard>
+        </SynapseCard>
     );
 };

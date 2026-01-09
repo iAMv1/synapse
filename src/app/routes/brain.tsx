@@ -1,29 +1,169 @@
-import { GlassCard } from "../../components/ui/GlassCard";
+import { useSearchParams } from "react-router-dom";
+import { motion, AnimatePresence } from "framer-motion";
 import { ChatInterface } from "../../features/brain/ChatInterface";
 import { DocumentUpload } from "../../features/documents/upload/DocumentUpload";
+import { SharedNote } from "../../features/collaboration/SharedNote";
+import { RoomSelector } from "../../components/ui/RoomSelector";
+import { usePresence } from "../../hooks/usePresence";
+import { Users, BookOpen, MessageSquare, PenTool, ChevronLeft, ChevronRight, PanelRightClose, PanelRight } from "lucide-react";
+import { useState } from "react";
+import { clsx } from "clsx";
 
 export default function BrainPage() {
+    const [searchParams] = useSearchParams();
+    const roomId = searchParams.get('roomId');
+    const onlineUsers = usePresence(roomId || '');
+
+    // Collapsible panel states
+    const [isSourcesOpen, setIsSourcesOpen] = useState(true);
+    const [isStudioOpen, setIsStudioOpen] = useState(true);
+
     return (
-        <div className="space-y-6">
-            <div className="flex items-center justify-between">
-                <div>
-                    <h1 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-emerald-400 to-blue-500">
-                        The Brain
-                    </h1>
-                    <p className="text-gray-400">Collaborative Knowledge Base & AI Assistant</p>
+        <div className="h-[calc(100vh-120px)] flex flex-col gap-3">
+            {/* Header Bar - Compact */}
+            <div className="flex items-center justify-between px-4 py-2 bg-[var(--bg-secondary)]/50 border border-[var(--border-subtle)] rounded-xl">
+                <div className="flex items-center gap-3">
+                    <div className="w-7 h-7 rounded-lg bg-[var(--bg-elevated)] border border-[var(--border-subtle)] flex items-center justify-center">
+                        <Users size={14} className="text-[var(--text-secondary)]" />
+                    </div>
+                    <div>
+                        <h2 className="text-sm font-bold text-[var(--text-primary)]">
+                            {roomId ? 'Neural Session' : 'Personal Workspace'}
+                        </h2>
+                        <span className="text-[10px] text-[var(--text-tertiary)] flex items-center gap-1">
+                            <span className="w-1.5 h-1.5 rounded-full bg-[var(--success)] animate-pulse" />
+                            {onlineUsers.length} online
+                        </span>
+                    </div>
+                </div>
+
+                {/* User Avatars */}
+                <div className="flex items-center gap-2">
+                    <div className="flex -space-x-2">
+                        {roomId && onlineUsers.slice(0, 3).map((u) => (
+                            <div
+                                key={u.user_id}
+                                className="w-7 h-7 rounded-full border-2 border-[var(--bg-primary)] bg-[var(--bg-elevated)] flex items-center justify-center text-[10px] font-bold text-[var(--text-secondary)]"
+                                title={u.username}
+                            >
+                                {u.avatar_url ? (
+                                    <img src={u.avatar_url} alt={u.username} className="w-full h-full rounded-full object-cover" />
+                                ) : (
+                                    u.username.charAt(0).toUpperCase()
+                                )}
+                            </div>
+                        ))}
+                    </div>
+                    <RoomSelector
+                        currentRoomId={roomId}
+                        onSelectRoom={(id) => {
+                            const params = new URLSearchParams(searchParams);
+                            if (id) params.set('roomId', id);
+                            else params.delete('roomId');
+                            window.location.search = params.toString();
+                        }}
+                    />
                 </div>
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                {/* Knowledge Graph / Documents Space */}
-                <div className="lg:col-span-1 h-[600px]">
-                    <DocumentUpload />
+            {/* Main Workspace - Flexbox Layout */}
+            <div className="flex-1 flex gap-3 min-h-0 overflow-hidden">
+
+                {/* Sources Panel - Collapsible Left */}
+                <AnimatePresence initial={false}>
+                    {isSourcesOpen && (
+                        <motion.div
+                            initial={{ width: 0, opacity: 0 }}
+                            animate={{ width: 240, opacity: 1 }}
+                            exit={{ width: 0, opacity: 0 }}
+                            transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                            className="flex-shrink-0 h-full bg-[var(--bg-secondary)]/50 border border-[var(--border-subtle)] rounded-xl overflow-hidden flex flex-col"
+                        >
+                            <div className="px-3 py-2 border-b border-[var(--border-subtle)] flex items-center justify-between bg-[var(--bg-secondary)]">
+                                <div className="flex items-center gap-2">
+                                    <BookOpen size={14} className="text-[var(--accent-secondary)]" />
+                                    <h3 className="text-xs font-bold text-[var(--text-secondary)] uppercase tracking-wider">Sources</h3>
+                                </div>
+                                <button onClick={() => setIsSourcesOpen(false)} className="p-1 rounded hover:bg-[var(--bg-elevated)] text-[var(--text-tertiary)]">
+                                    <ChevronLeft size={14} />
+                                </button>
+                            </div>
+                            <div className="flex-1 overflow-y-auto p-3 custom-scrollbar">
+                                <DocumentUpload />
+                            </div>
+                        </motion.div>
+                    )}
+                </AnimatePresence>
+
+                {/* Toggle Button for Sources (when collapsed) */}
+                {!isSourcesOpen && (
+                    <button
+                        onClick={() => setIsSourcesOpen(true)}
+                        className="flex-shrink-0 w-10 h-full bg-[var(--bg-secondary)]/50 border border-[var(--border-subtle)] rounded-xl flex items-center justify-center hover:bg-[var(--bg-elevated)] transition-colors group"
+                    >
+                        <ChevronRight size={16} className="text-[var(--text-tertiary)] group-hover:text-[var(--accent-secondary)]" />
+                    </button>
+                )}
+
+                {/* Chat Panel - Expands to fill available space */}
+                <div className="flex-1 min-w-0 bg-[var(--bg-secondary)]/50 border border-[var(--border-subtle)] rounded-xl overflow-hidden flex flex-col">
+                    <div className="px-4 py-2 border-b border-[var(--border-subtle)] flex items-center justify-between bg-[var(--bg-secondary)]">
+                        <div className="flex items-center gap-2">
+                            <MessageSquare size={14} className="text-[var(--accent-primary)]" />
+                            <h3 className="text-xs font-bold text-[var(--text-secondary)] uppercase tracking-wider">Neural Chat</h3>
+                        </div>
+                        <div className="flex items-center gap-1">
+                            {!isSourcesOpen && (
+                                <button onClick={() => setIsSourcesOpen(true)} className="p-1.5 rounded hover:bg-[var(--bg-elevated)] text-[var(--text-tertiary)] hover:text-[var(--accent-secondary)]" title="Show Sources">
+                                    <BookOpen size={14} />
+                                </button>
+                            )}
+                            <button
+                                onClick={() => setIsStudioOpen(!isStudioOpen)}
+                                className="p-1.5 rounded hover:bg-[var(--bg-elevated)] text-[var(--text-tertiary)] hover:text-[var(--accent-tertiary)]"
+                                title={isStudioOpen ? "Hide Studio" : "Show Studio"}
+                            >
+                                {isStudioOpen ? <PanelRightClose size={14} /> : <PanelRight size={14} />}
+                            </button>
+                        </div>
+                    </div>
+                    <div className="flex-1 overflow-hidden">
+                        <ChatInterface />
+                    </div>
                 </div>
 
-                {/* Chat Interface */}
-                <GlassCard className="lg:col-span-2 h-[600px] flex flex-col">
-                    <ChatInterface />
-                </GlassCard>
+                {/* Studio Panel - Collapsible Right */}
+                <AnimatePresence initial={false}>
+                    {isStudioOpen && (
+                        <motion.div
+                            initial={{ width: 0, opacity: 0 }}
+                            animate={{ width: 320, opacity: 1 }}
+                            exit={{ width: 0, opacity: 0 }}
+                            transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                            className="flex-shrink-0 h-full bg-[var(--bg-secondary)]/50 border border-[var(--border-subtle)] rounded-xl overflow-hidden flex flex-col"
+                        >
+                            <div className="px-3 py-2 border-b border-[var(--border-subtle)] flex items-center justify-between bg-[var(--bg-secondary)]">
+                                <div className="flex items-center gap-2">
+                                    <PenTool size={14} className="text-[var(--accent-tertiary)]" />
+                                    <h3 className="text-xs font-bold text-[var(--text-secondary)] uppercase tracking-wider">Studio</h3>
+                                </div>
+                                <button onClick={() => setIsStudioOpen(false)} className="p-1 rounded hover:bg-[var(--bg-elevated)] text-[var(--text-tertiary)]">
+                                    <ChevronRight size={14} />
+                                </button>
+                            </div>
+                            <div className="flex-1 overflow-y-auto custom-scrollbar">
+                                {roomId ? (
+                                    <SharedNote roomId={roomId} />
+                                ) : (
+                                    <div className="p-6 text-center flex flex-col items-center justify-center h-full text-[var(--text-tertiary)]">
+                                        <PenTool size={32} className="mb-3 opacity-20" />
+                                        <p className="text-sm">Select a room for notes</p>
+                                    </div>
+                                )}
+                            </div>
+                        </motion.div>
+                    )}
+                </AnimatePresence>
             </div>
         </div>
     );
