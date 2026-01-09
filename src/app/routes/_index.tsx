@@ -143,39 +143,45 @@ export default function LandingPage() {
                         transition={{ duration: 1, delay: 0.5 }}
                         className="mt-20 relative"
                     >
-                        <div className="relative mx-auto w-full max-w-3xl aspect-video rounded-2xl overflow-hidden border border-[var(--border-subtle)] shadow-[0_40px_100px_-20px_rgba(0,0,0,0.8)]">
-                            {/* Mock App Preview */}
-                            <div className="absolute inset-0 bg-gradient-to-br from-[var(--bg-secondary)] to-[var(--bg-primary)]">
-                                {/* Header bar */}
-                                <div className="h-10 bg-[var(--bg-elevated)] border-b border-[var(--border-subtle)] flex items-center px-4 gap-2">
-                                    <div className="w-3 h-3 rounded-full bg-[var(--accent-tertiary)]" />
-                                    <div className="w-3 h-3 rounded-full bg-[var(--warning)]" />
-                                    <div className="w-3 h-3 rounded-full bg-[var(--success)]" />
+                        <div className="relative mx-auto w-full max-w-3xl rounded-2xl overflow-hidden border border-[var(--border-subtle)] bg-[#0D1117] shadow-[0_40px_100px_-20px_rgba(0,0,0,0.8)] font-mono text-sm leading-relaxed">
+                            {/* Terminal Header */}
+                            <div className="h-10 bg-[#161B22] border-b border-[var(--border-subtle)] flex items-center px-4 justify-between">
+                                <div className="flex gap-2">
+                                    <div className="w-3 h-3 rounded-full bg-[#FF5F56]" />
+                                    <div className="w-3 h-3 rounded-full bg-[#FFBD2E]" />
+                                    <div className="w-3 h-3 rounded-full bg-[#27C93F]" />
                                 </div>
-                                {/* Content */}
-                                <div className="p-6 flex gap-4">
-                                    <div className="w-1/4 space-y-3">
-                                        <div className="h-4 bg-[var(--border-subtle)] rounded w-3/4" />
-                                        <div className="h-4 bg-[var(--border-subtle)] rounded w-1/2" />
-                                        <div className="h-4 bg-[var(--accent-primary)]/20 rounded w-full" />
-                                        <div className="h-4 bg-[var(--border-subtle)] rounded w-2/3" />
-                                    </div>
-                                    <div className="flex-1 space-y-4">
-                                        <div className="h-6 bg-[var(--border-subtle)] rounded w-1/3" />
-                                        <div className="space-y-2">
-                                            <div className="h-3 bg-[var(--border-subtle)] rounded w-full" />
-                                            <div className="h-3 bg-[var(--border-subtle)] rounded w-5/6" />
-                                            <div className="h-3 bg-[var(--border-subtle)] rounded w-4/6" />
-                                        </div>
-                                        <div className="mt-6 p-4 rounded-xl bg-[var(--accent-primary)]/10 border border-[var(--accent-primary)]/20">
-                                            <div className="h-3 bg-[var(--accent-primary)]/30 rounded w-full" />
-                                            <div className="h-3 bg-[var(--accent-primary)]/30 rounded w-3/4 mt-2" />
-                                        </div>
-                                    </div>
+                                <div className="text-xs text-[var(--text-tertiary)] flex items-center gap-1.5">
+                                    <div className="w-2 h-2 rounded-full bg-[var(--accent-primary)] animate-pulse" />
+                                    synapse.config.ts
                                 </div>
                             </div>
-                            {/* Glowing reflection */}
-                            <div className="absolute inset-0 bg-gradient-to-t from-transparent via-transparent to-white/5" />
+
+                            {/* Code Content */}
+                            <div className="p-6 overflow-x-auto relative group">
+                                <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[#0D1117]/50 pointer-events-none" />
+                                <pre className="text-[var(--text-secondary)]">
+                                    <code>
+                                        <div className="flex"><span className="text-[#8B949E] w-6 select-none">1</span><span className="text-[#FF7B72]">import</span> <span className="text-[#C9D1D9]">{'{'}</span> <span className="text-[#D2A8FF]">NeuralNetwork</span> <span className="text-[#C9D1D9]">{'}'}</span> <span className="text-[#FF7B72]">from</span> <span className="text-[#A5D6FF]">'@synapse/core'</span><span className="text-[#C9D1D9];">;</span></div>
+                                        <div className="flex"><span className="text-[#8B949E] w-6 select-none">2</span></div>
+                                        <div className="flex"><span className="text-[#8B949E] w-6 select-none">3</span><span className="text-[#8B949E]">// Initialize Second Brain</span></div>
+                                        <div className="flex"><span className="text-[#8B949E] w-6 select-none">4</span><span className="text-[#FF7B72]">const</span> <span className="text-[#79C0FF]">brain</span> <span className="text-[#FF7B72]">=</span> <span className="text-[#FF7B72]">new</span> <span className="text-[#D2A8FF]">NeuralNetwork</span><span className="text-[#C9D1D9]">(</span><span className="text-[#C9D1D9]">{'{'}</span></div>
+                                        <div className="flex"><span className="text-[#8B949E] w-6 select-none">5</span>    <span className="text-[#79C0FF]">learningRate</span><span className="text-[#FF7B72]">:</span> <span className="text-[#A5D6FF]">'continuous'</span><span className="text-[#C9D1D9]">,</span></div>
+                                        <div className="flex"><span className="text-[#8B949E] w-6 select-none">6</span>    <span className="text-[#79C0FF]">memory</span><span className="text-[#FF7B72]">:</span> <span className="text-[#A5D6FF]">'infinite'</span><span className="text-[#C9D1D9]">,</span></div>
+                                        <div className="flex"><span className="text-[#8B949E] w-6 select-none">7</span>    <span className="text-[#79C0FF]">synapses</span><span className="text-[#FF7B72]">:</span> <span className="text-[#79C0FF]">1_000_000_000</span></div>
+                                        <div className="flex"><span className="text-[#8B949E] w-6 select-none">8</span><span className="text-[#C9D1D9]">{'}'}</span><span className="text-[#C9D1D9]">)</span><span className="text-[#C9D1D9];">;</span></div>
+                                        <div className="flex"><span className="text-[#8B949E] w-6 select-none">9</span></div>
+                                        <div className="flex"><span className="text-[#8B949E] w-6 select-none">10</span><span className="text-[#8B949E]">// Connect to knowledge sources</span></div>
+                                        <div className="flex"><span className="text-[#8B949E] w-6 select-none">11</span><span className="text-[#FF7B72]">await</span> <span className="text-[#79C0FF]">brain</span><span className="text-[#C9D1D9]">.</span><span className="text-[#D2A8FF]">connect</span><span className="text-[#C9D1D9]">(</span><span className="text-[#C9D1D9]">[</span></div>
+                                        <div className="flex"><span className="text-[#8B949E] w-6 select-none">12</span>    <span className="text-[#A5D6FF]">'documents/*.pdf'</span><span className="text-[#C9D1D9]">,</span></div>
+                                        <div className="flex"><span className="text-[#8B949E] w-6 select-none">13</span>    <span className="text-[#A5D6FF]">'notes/**/*.md'</span><span className="text-[#C9D1D9]">,</span></div>
+                                        <div className="flex"><span className="text-[#8B949E] w-6 select-none">14</span>    <span className="text-[#A5D6FF]">'team/chats'</span></div>
+                                        <div className="flex"><span className="text-[#8B949E] w-6 select-none">15</span><span className="text-[#C9D1D9]">]</span><span className="text-[#C9D1D9]">)</span><span className="text-[#C9D1D9];">;</span></div>
+                                        <div className="flex"><span className="text-[#8B949E] w-6 select-none">16</span></div>
+                                        <div className="flex"><span className="text-[#8B949E] w-6 select-none">17</span><span className="text-[#79C0FF]">console</span><span className="text-[#C9D1D9]">.</span><span className="text-[#D2A8FF]">log</span><span className="text-[#C9D1D9]">(</span><span className="text-[#A5D6FF]">'Second Brain Online 🧠'</span><span className="text-[#C9D1D9]">)</span><span className="text-[#C9D1D9];">;</span><span className="inline-block w-2.5 h-4 ml-1 align-middle bg-[var(--accent-primary)] animate-pulse" /></div>
+                                    </code>
+                                </pre>
+                            </div>
                         </div>
                         {/* Ambient glow under preview */}
                         <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-3/4 h-32 bg-[var(--accent-primary)] blur-[100px] opacity-20" />

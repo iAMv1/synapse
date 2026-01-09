@@ -53,7 +53,7 @@ export const SynapseButton = ({
         >
             {loading && <Loader2 className="w-4 h-4 animate-spin" />}
             {!loading && Icon && <Icon className="w-4 h-4" />}
-            <span>{children}</span>
+            {children}
         </motion.button>
     );
 };

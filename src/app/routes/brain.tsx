@@ -1,17 +1,21 @@
+import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
+import { Users, BookOpen, MessageSquare, PenTool, ChevronLeft, ChevronRight, PanelRightClose, PanelRight } from "lucide-react";
+
 import { ChatInterface } from "../../features/brain/ChatInterface";
 import { DocumentUpload } from "../../features/documents/upload/DocumentUpload";
 import { SharedNote } from "../../features/collaboration/SharedNote";
 import { RoomSelector } from "../../components/ui/RoomSelector";
 import { usePresence } from "../../hooks/usePresence";
-import { Users, BookOpen, MessageSquare, PenTool, ChevronLeft, ChevronRight, PanelRightClose, PanelRight } from "lucide-react";
-import { useState } from "react";
+import { useLLMStore, AVAILABLE_MODELS } from "../../stores/useLLMStore";
 
 export default function BrainPage() {
     const [searchParams] = useSearchParams();
     const roomId = searchParams.get('roomId');
     const onlineUsers = usePresence(roomId || '');
+    const { selectedModel } = useLLMStore();
+    const activeModelName = AVAILABLE_MODELS.find(m => m.id === selectedModel)?.name || 'Synapse AI';
 
     // Collapsible panel states
     const [isSourcesOpen, setIsSourcesOpen] = useState(true);
@@ -19,30 +23,40 @@ export default function BrainPage() {
 
     return (
         <div className="h-[calc(100vh-120px)] flex flex-col gap-3">
-            {/* Header Bar - Compact */}
-            <div className="flex items-center justify-between px-4 py-2 bg-[var(--bg-secondary)]/50 border border-[var(--border-subtle)] rounded-xl">
-                <div className="flex items-center gap-3">
-                    <div className="w-7 h-7 rounded-lg bg-[var(--bg-elevated)] border border-[var(--border-subtle)] flex items-center justify-center">
-                        <Users size={14} className="text-[var(--text-secondary)]" />
+            {/* Header Pod - Glassmorphic HUD */}
+            <div className="flex items-center justify-between px-4 py-3 bg-[var(--bg-secondary)]/80 backdrop-blur-md border border-[var(--border-subtle)] rounded-2xl shadow-xl shadow-black/20">
+                <div className="flex items-center gap-4">
+                    {/* Session Indicator */}
+                    <div className="flex items-center gap-3 pr-4 border-r border-[var(--border-subtle)]">
+                        <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-[var(--bg-elevated)] to-[var(--bg-secondary)] border border-[var(--border-subtle)] flex items-center justify-center shadow-inner">
+                            <Users size={14} className="text-[var(--text-secondary)]" />
+                        </div>
+                        <div>
+                            <h2 className="text-sm font-bold text-[var(--text-primary)] tracking-tight">
+                                {roomId ? 'NEURAL_SESSION' : 'WORKSPACE_LOCAL'}
+                            </h2>
+                            <span className="text-[10px] text-[var(--accent-success)] font-mono flex items-center gap-1.5 uppercase tracking-wider">
+                                <span className="w-1.5 h-1.5 rounded-full bg-[var(--success)] shadow-[0_0_8px_var(--success)] animate-pulse" />
+                                {onlineUsers.length > 0 ? `${onlineUsers.length} NODES_ACTIVE` : 'STANDBY'}
+                            </span>
+                        </div>
                     </div>
-                    <div>
-                        <h2 className="text-sm font-bold text-[var(--text-primary)]">
-                            {roomId ? 'Neural Session' : 'Personal Workspace'}
-                        </h2>
-                        <span className="text-[10px] text-[var(--text-tertiary)] flex items-center gap-1">
-                            <span className="w-1.5 h-1.5 rounded-full bg-[var(--success)] animate-pulse" />
-                            {onlineUsers.length} online
-                        </span>
+
+                    {/* Model Indicator */}
+                    <div className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[var(--bg-primary)]/50 border border-[var(--border-subtle)]">
+                        <div className="w-1.5 h-1.5 rounded-full bg-[var(--accent-secondary)]" />
+                        <span className="text-xs font-mono text-[var(--text-secondary)]">MODEL:</span>
+                        <span className="text-xs font-bold text-[var(--text-primary)]">{activeModelName}</span>
                     </div>
                 </div>
 
-                {/* User Avatars */}
-                <div className="flex items-center gap-2">
-                    <div className="flex -space-x-2">
+                {/* User Avatars & Controls */}
+                <div className="flex items-center gap-4">
+                    <div className="flex -space-x-3">
                         {roomId && onlineUsers.slice(0, 3).map((u) => (
                             <div
                                 key={u.user_id}
-                                className="w-7 h-7 rounded-full border-2 border-[var(--bg-primary)] bg-[var(--bg-elevated)] flex items-center justify-center text-[10px] font-bold text-[var(--text-secondary)]"
+                                className="w-8 h-8 rounded-full border-2 border-[var(--bg-secondary)] bg-[var(--bg-elevated)] flex items-center justify-center text-[10px] font-bold text-[var(--text-secondary)] shadow-sm"
                                 title={u.username}
                             >
                                 {u.avatar_url ? (
@@ -53,6 +67,7 @@ export default function BrainPage() {
                             </div>
                         ))}
                     </div>
+                    <div className="h-8 w-[1px] bg-[var(--border-subtle)] mx-2" />
                     <RoomSelector
                         currentRoomId={roomId}
                         onSelectRoom={(id) => {

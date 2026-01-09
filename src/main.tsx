@@ -18,15 +18,10 @@ const BrainPage = React.lazy(() => import('./app/routes/brain'));
 const RoomsPage = React.lazy(() => import('./app/routes/rooms'));
 const SkillsPage = React.lazy(() => import('./app/routes/skills'));
 
+import { TerminalLoader } from './components/ui/TerminalLoader';
+
 // Loading fallback for lazy-loaded routes
-const LoadingFallback = () => (
-  <div className="flex h-full w-full items-center justify-center">
-    <div className="flex flex-col items-center gap-4">
-      <div className="h-12 w-12 animate-spin rounded-full border-4 border-cyan-500/30 border-t-cyan-500" />
-      <span className="text-sm text-white/50">Loading...</span>
-    </div>
-  </div>
-);
+const LoadingFallback = () => <TerminalLoader variant="fullscreen" />;
 
 const queryClient = new QueryClient();
 

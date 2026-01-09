@@ -10,10 +10,8 @@ import {
     Upload,
     Brain,
     Trophy,
-    Clock,
     ArrowRight,
     FileText,
-    Sparkles,
     Zap
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
@@ -98,87 +96,117 @@ export default function DashboardPage() {
                 </div>
             </div>
 
-            {/* Bento Grid Layout - Premium Asymmetric */}
-            <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            {/* Dashboard Grid - Neural Layout */}
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
 
-                {/* Stats Cards - Row 1 */}
-                {stats.map((stat, i) => (
-                    <SynapseCard
-                        key={i}
-                        hoverEffect
-                        className="flex flex-col justify-between"
-                    >
-                        <div className={`p-3 rounded-xl w-fit ${stat.bg} ${stat.color} mb-4`}>
-                            <stat.icon size={24} />
+                {/* Left Column: Stats & Quick Actions (4 cols) */}
+                <div className="lg:col-span-4 space-y-6">
+                    {/* Stats Grid */}
+                    <SynapseCard className="p-0 overflow-hidden">
+                        <div className="p-4 border-b border-[var(--border-subtle)] bg-[var(--bg-elevated)] flex items-center gap-2">
+                            <Trophy size={16} className="text-[var(--warning)]" />
+                            <span className="text-xs font-bold uppercase tracking-widest text-[var(--text-secondary)]">Vitals</span>
                         </div>
-                        <div>
-                            <p className="text-[var(--text-tertiary)] text-xs font-bold tracking-widest uppercase mb-1">{stat.label}</p>
-                            <h3 className="text-3xl font-bold text-[var(--text-primary)] font-mono">{stat.value}</h3>
+                        <div className="grid grid-cols-1 divide-y divide-[var(--border-subtle)]">
+                            {stats.map((stat, i) => (
+                                <div key={i} className="p-5 flex items-center justify-between hover:bg-white/5 transition-colors group">
+                                    <div className="flex items-center gap-4">
+                                        <div className={`p-2 rounded-lg ${stat.bg} ${stat.color} group-hover:scale-110 transition-transform`}>
+                                            <stat.icon size={18} />
+                                        </div>
+                                        <span className="text-sm text-[var(--text-secondary)] font-medium">{stat.label}</span>
+                                    </div>
+                                    <span className="text-xl font-mono font-bold text-[var(--text-primary)]">{stat.value}</span>
+                                </div>
+                            ))}
                         </div>
                     </SynapseCard>
-                ))}
 
-                {/* Neural Activity Feed - Spans 2 cols, 2 rows */}
-                <SynapseCard className="md:col-span-2 lg:col-span-2 row-span-2 flex flex-col relative overflow-hidden group">
-                    <div className="flex items-center justify-between mb-6">
-                        <h3 className="text-xl font-serif text-[var(--text-primary)] flex items-center gap-2">
-                            <Clock size={20} className="text-[var(--text-secondary)]" />
-                            Recent Documents
-                        </h3>
-                    </div>
-
-                    <div className="space-y-2 relative z-10 flex-1">
-                        {recentDocs.length === 0 ? (
-                            <div className="text-center py-8 text-[var(--text-tertiary)]">
-                                <FileText size={32} className="mx-auto mb-3 opacity-30" />
-                                <p className="text-sm">No documents yet</p>
-                                <p className="text-xs mt-1">Upload your first document in the Brain</p>
+                    {/* Daily Drill Card - Compact */}
+                    <SynapseCard
+                        className="relative overflow-hidden cursor-pointer group border-[var(--accent-primary)]/30 hover:border-[var(--accent-primary)]/60"
+                        onClick={() => setShowQuiz(true)}
+                        hoverEffect
+                    >
+                        <div className="absolute -right-8 -top-8 w-24 h-24 bg-[var(--accent-primary)] opacity-20 blur-[40px] rounded-full group-hover:opacity-30 transition-opacity" />
+                        <div className="flex items-center gap-3 mb-2">
+                            <div className="p-1.5 rounded-md bg-[var(--accent-primary)]/20 text-[var(--accent-primary)]">
+                                <Zap size={16} />
                             </div>
-                        ) : (
-                            recentDocs.map((doc, idx) => (
-                                <motion.div
-                                    key={doc.id}
-                                    initial={{ x: -10, opacity: 0 }}
-                                    animate={{ x: 0, opacity: 1 }}
-                                    transition={{ delay: idx * 0.1 }}
-                                    className="flex items-center gap-4 p-3 rounded-lg hover:bg-white/5 transition-colors cursor-pointer group/item"
-                                    onClick={() => navigate('/app/brain')}
-                                >
-                                    <div className="p-2 rounded-lg bg-[var(--bg-elevated)] border border-[var(--border-subtle)] text-blue-400">
-                                        <FileText size={16} />
+                            <span className="text-xs font-bold uppercase tracking-widest text-[var(--accent-primary)]">Daily Drill</span>
+                        </div>
+                        <h3 className="text-lg font-serif italic text-[var(--text-primary)] mb-1">
+                            "Sharpen your neural pathways."
+                        </h3>
+                        <p className="text-xs text-[var(--text-tertiary)]">Start 3-minute quiz</p>
+                    </SynapseCard>
+                </div>
+
+                {/* Right Column: Activity Feed (8 cols) */}
+                <div className="lg:col-span-8 flex flex-col gap-6">
+                    {/* Recent Documents Panel */}
+                    <SynapseCard className="flex-1 flex flex-col min-h-[400px]">
+                        <div className="flex items-center justify-between mb-6">
+                            <h3 className="text-lg font-serif text-[var(--text-primary)] flex items-center gap-2">
+                                <FileText size={18} className="text-[var(--text-secondary)]" />
+                                Recent Data Streams
+                            </h3>
+                            <SynapseButton variant="ghost" size="sm" onClick={() => navigate('/app/brain')} className="text-xs">
+                                View All
+                                <ArrowRight size={12} className="ml-1" />
+                            </SynapseButton>
+                        </div>
+
+                        <div className="flex-1 overflow-hidden">
+                            {recentDocs.length === 0 ? (
+                                <div className="h-full flex flex-col items-center justify-center text-[var(--text-tertiary)] border-2 border-dashed border-[var(--border-subtle)] rounded-xl">
+                                    <FileText size={32} className="mb-3 opacity-30" />
+                                    <p className="text-sm font-mono">NO_DATA_STREAM</p>
+                                    <SynapseButton variant="ghost" size="sm" onClick={() => navigate('/app/brain')} className="mt-2">
+                                        Upload Source
+                                    </SynapseButton>
+                                </div>
+                            ) : (
+                                <div className="w-full">
+                                    <div className="grid grid-cols-12 gap-4 px-4 py-2 border-b border-[var(--border-subtle)] text-xs font-mono text-[var(--text-tertiary)] uppercase tracking-wider">
+                                        <div className="col-span-6">Source Name</div>
+                                        <div className="col-span-3">Type</div>
+                                        <div className="col-span-3 text-right">Timestamp</div>
                                     </div>
-                                    <div className="flex-1 min-w-0">
-                                        <p className="text-sm font-medium text-[var(--text-primary)] truncate">{doc.title}</p>
-                                        <p className="text-xs text-[var(--text-tertiary)] font-mono">Uploaded</p>
+                                    <div className="divide-y divide-[var(--border-subtle)]">
+                                        {recentDocs.map((doc, idx) => (
+                                            <motion.div
+                                                key={doc.id}
+                                                initial={{ opacity: 0, x: -10 }}
+                                                animate={{ opacity: 1, x: 0 }}
+                                                transition={{ delay: idx * 0.05 }}
+                                                className="grid grid-cols-12 gap-4 px-4 py-3 hover:bg-white/5 transition-colors cursor-pointer items-center group"
+                                                onClick={() => navigate('/app/brain')}
+                                            >
+                                                <div className="col-span-6 flex items-center gap-3">
+                                                    <div className="w-1.5 h-1.5 rounded-full bg-[var(--text-tertiary)] group-hover:bg-[var(--accent-primary)] transition-colors" />
+                                                    <span className="text-sm font-medium text-[var(--text-primary)] truncate group-hover:text-[var(--accent-primary)] transition-colors">
+                                                        {doc.title}
+                                                    </span>
+                                                </div>
+                                                <div className="col-span-3">
+                                                    <span className="px-2 py-1 rounded text-[10px] bg-[var(--bg-elevated)] border border-[var(--border-subtle)] font-mono text-[var(--text-secondary)]">
+                                                        DOC
+                                                    </span>
+                                                </div>
+                                                <div className="col-span-3 text-right">
+                                                    <span className="text-xs font-mono text-[var(--text-tertiary)]">
+                                                        {new Date(doc.created_at).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
+                                                    </span>
+                                                </div>
+                                            </motion.div>
+                                        ))}
                                     </div>
-                                    <span className="text-xs text-[var(--text-tertiary)]">
-                                        {new Date(doc.created_at).toLocaleDateString()}
-                                    </span>
-                                </motion.div>
-                            ))
-                        )}
-                    </div>
-
-                    <div className="mt-6 pt-4 border-t border-[var(--border-subtle)]">
-                        <SynapseButton variant="ghost" size="sm" className="w-full justify-between group/btn" onClick={() => navigate('/app/brain')}>
-                            <span>Open Brain Workspace</span>
-                            <ArrowRight size={14} className="group-hover/btn:translate-x-1 transition-transform" />
-                        </SynapseButton>
-                    </div>
-                </SynapseCard>
-
-                {/* Daily Tip - Spans 2 cols */}
-                <SynapseCard className="md:col-span-1 lg:col-span-2 relative overflow-hidden border-[var(--accent-primary)]/30">
-                    <div className="absolute -right-10 -top-10 w-40 h-40 bg-[var(--accent-primary)] opacity-10 blur-[60px] rounded-full pointer-events-none" />
-
-                    <p className="text-xs font-bold text-[var(--accent-primary)] uppercase tracking-widest mb-3 flex items-center gap-2">
-                        <Sparkles size={12} />
-                        Neural Optimization Tip
-                    </p>
-                    <p className="text-lg md:text-xl text-[var(--text-secondary)] font-light leading-relaxed font-serif italic">
-                        "Connecting seemingly unrelated concepts creates the strongest neural pathways. Try linking your documents in the Brain view to discover hidden patterns."
-                    </p>
-                </SynapseCard>
+                                </div>
+                            )}
+                        </div>
+                    </SynapseCard>
+                </div>
             </div>
 
             {/* Quiz Modal */}
