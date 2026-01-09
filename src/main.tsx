@@ -30,14 +30,21 @@ const LoadingFallback = () => (
 
 const queryClient = new QueryClient();
 
+// Protected route wrapper - only initializes auth for /app routes
+const ProtectedAppLayout = () => (
+  <AuthProvider>
+    <AppLayout />
+  </AuthProvider>
+);
+
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <LandingPage />,
+    element: <LandingPage />,  // No auth check - renders instantly
   },
   {
     path: '/login',
-    element: <Login />,
+    element: <Login />,  // No auth check - renders instantly
   },
   {
     path: '/auth',
@@ -45,7 +52,7 @@ const router = createBrowserRouter([
   },
   {
     path: '/app',
-    element: <AppLayout />,
+    element: <ProtectedAppLayout />,  // Auth only for protected routes
     children: [
       {
         index: true,
@@ -90,12 +97,10 @@ const router = createBrowserRouter([
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <QueryClientProvider client={queryClient}>
-      <AuthProvider>
-        <ErrorBoundary>
-          <RouterProvider router={router} />
-          <ToastContainer />
-        </ErrorBoundary>
-      </AuthProvider>
+      <ErrorBoundary>
+        <RouterProvider router={router} />
+        <ToastContainer />
+      </ErrorBoundary>
     </QueryClientProvider>
   </React.StrictMode>,
 );
