@@ -4,10 +4,10 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer base {
-  /* Fonts */
-  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&family=Nanum+Pen+Script&display=swap');
+/* Non-blocking font loading - moved outside @layer to prevent render blocking */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&family=Nanum+Pen+Script&display=swap');
 
+@layer base {
   :root {
     /* Nostalgic Futurism Palette */
     --bg-primary: #050505;
