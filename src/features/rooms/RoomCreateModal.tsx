@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Users, Globe, Lock, Loader2 } from 'lucide-react';
+import { X, Users, Globe, Lock } from 'lucide-react';
 import { SynapseCard } from '../../components/ui/SynapseCard';
 import { SynapseButton } from '../../components/ui/SynapseButton';
 import { SynapseInput } from '../../components/ui/SynapseInput';

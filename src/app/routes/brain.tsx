@@ -7,7 +7,6 @@ import { RoomSelector } from "../../components/ui/RoomSelector";
 import { usePresence } from "../../hooks/usePresence";
 import { Users, BookOpen, MessageSquare, PenTool, ChevronLeft, ChevronRight, PanelRightClose, PanelRight } from "lucide-react";
 import { useState } from "react";
-import { clsx } from "clsx";
 
 export default function BrainPage() {
     const [searchParams] = useSearchParams();

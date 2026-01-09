@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Brain, ArrowRight, Loader2 } from "lucide-react";
+import { Brain, ArrowRight } from "lucide-react";
 import { SynapseCard } from "../../components/ui/SynapseCard";
 import { SynapseInput } from "../../components/ui/SynapseInput";
 import { SynapseButton } from "../../components/ui/SynapseButton";

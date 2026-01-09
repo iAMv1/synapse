@@ -7,7 +7,6 @@ import { useAuthStore } from "../../stores/useAuthStore";
 import { supabase } from "../../lib/supabase";
 import { SwipeableQuizDeck } from "../../components/quiz/SwipeableQuizDeck";
 import {
-    LayoutDashboard,
     Upload,
     Brain,
     Trophy,

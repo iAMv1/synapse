@@ -1,5 +1,5 @@
 import { useRef } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { motion, useScroll, useTransform, useInView } from "framer-motion";
 import { ArrowRight, Brain, Share2, Zap, Sparkles, BookOpen, Users, Target } from "lucide-react";
 import { useAuthStore } from "../../stores/useAuthStore";
