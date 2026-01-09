@@ -11,7 +11,7 @@ import { RoomCreateModal } from "../../features/rooms/RoomCreateModal";
 import { RoomJoinModal } from "../../features/rooms/RoomJoinModal";
 
 export default function RoomsPage() {
-    const { user } = useAuthStore();
+    useAuthStore(); // Hook called to maintain subscription, user not directly used here
     const navigate = useNavigate();
     const [rooms, setRooms] = useState<Room[]>([]);
     const [isLoading, setIsLoading] = useState(true);

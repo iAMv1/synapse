@@ -1,13 +1,14 @@
-import { ButtonHTMLAttributes } from 'react';
+import type { ReactNode } from 'react';
 import { motion, type HTMLMotionProps } from 'framer-motion';
 import { clsx } from 'clsx';
 import { Loader2 } from 'lucide-react';
 
-interface SynapseButtonProps extends Omit<HTMLMotionProps<"button">, "ref"> {
+interface SynapseButtonProps extends Omit<HTMLMotionProps<"button">, "ref" | "children"> {
     variant?: 'primary' | 'secondary' | 'ghost' | 'danger';
     size?: 'sm' | 'md' | 'lg';
     loading?: boolean;
     icon?: React.ElementType;
+    children?: ReactNode;
 }
 
 export const SynapseButton = ({

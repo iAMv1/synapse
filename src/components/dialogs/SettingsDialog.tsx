@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuthStore } from '../../stores/useAuthStore';
 import { supabase } from '../../lib/supabase';
-import { User, LogOut, X, Save, Keyboard, Palette } from 'lucide-react';
+import { User, LogOut, X, Save, Keyboard } from 'lucide-react';
 import { SynapseButton } from '../ui/SynapseButton';
 
 interface SettingsDialogProps {
