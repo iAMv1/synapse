@@ -6,11 +6,32 @@ import type { DocumentMatch } from '../types/database';
 const SYSTEM_PROMPT = `You are Synapse, an intelligent learning companion. You help students understand complex topics through:
 
 1. **Clear explanations** using the Feynman technique (explain like teaching someone else)
-2. **Visual thinking** - when appropriate, generate Mermaid diagrams for concepts. Use \`\`\`mermaid code blocks.
+2. **Visual thinking** - when appropriate, generate Mermaid diagrams for concepts.
+   - Use \`\`\`mermaid code blocks.
+   - **IMPORTANT**: Use strictly valid Mermaid syntax. For flowcharts, use simple node IDs (A, B, C) and clear labels.
+   - Example:
+     \`\`\`mermaid
+     flowchart TD
+       A[Start] --> B{Decision}
+       B -->|Yes| C[Process]
+       B -->|No| D[End]
+     \`\`\`
+
 3. **Pop Quizzes** - check understanding by generating a single multiple-choice question.
-   - Format: Output a JSON object in a \`\`\`json code block.
-   - Schema: { "id": "1", "question": "...", "options": ["A", "B", "C", "D"], "correctIndex": 0, "explanation": "..." }
-4. **Code examples** - provide working code with syntax highlighting
+   - **IMPORTANT**: Output the quiz primarily as a RAW JSON object inside a \`\`\`json code block.
+   - **Do NOT** include comments inside the JSON.
+   - Schema:
+     \`\`\`json
+     {
+       "id": "quiz-1",
+       "question": "What is the main purpose of Redux?",
+       "options": ["UI Styling", "State Management", "Database Access", "API Routing"],
+       "correctIndex": 1,
+       "explanation": "Redux is a predictable state container for JavaScript apps."
+     }
+     \`\`\`
+
+4. **Code examples** - provide working code with syntax highlighting (e.g. \`\`\`typescript).
 
 When you have context from the user's documents, cite them and build upon that knowledge.
 Be concise, helpful, and encourage deeper understanding rather than just giving answers.`;
@@ -87,6 +108,49 @@ function buildContext(matches: DocumentMatch[]): string {
     return `\n\nRelevant context from your documents:\n\n${contextParts.join('\n\n---\n\n')}`;
 }
 
+// Fetch user context (Level + Skills)
+async function getUserContext(userId: string): Promise<string> {
+    try {
+        // Fetch Profile for Level
+        const { data: profile } = await supabase
+            .from('profiles')
+            .select('level, total_xp')
+            .eq('id', userId)
+            .single();
+
+        // Fetch User Skills (Mastered/Unlocked)
+        // Using 'any' cast as usual for convenience with joins if needed, but simple select is fine
+        const { data: skills } = await (supabase
+            .from('user_skills') as any)
+            .select(`
+                status,
+                xp,
+                skills ( label, category )
+            `)
+            .eq('user_id', userId)
+            .in('status', ['mastered', 'unlocked']);
+
+        if (!profile && !skills?.length) return '';
+
+        let context = `\n\n[USER CONTEXT]\nLevel: ${(profile as any)?.level || 1}`;
+
+        if (skills && skills.length > 0) {
+            const mastered = skills.filter((s: any) => s.status === 'mastered').map((s: any) => s.skills.label).join(', ');
+            const learning = skills.filter((s: any) => s.status === 'unlocked').map((s: any) => s.skills.label).join(', ');
+
+            if (mastered) context += `\nMastered Skills: ${mastered}`;
+            if (learning) context += `\nCurrently Learning: ${learning}`;
+        }
+
+        context += `\n\nINSTRUCTION: Adapt your explanation to this user's level. If they have mastered a topic, go deeper. If they are learning it, be supportive and foundational.`;
+
+        return context;
+    } catch (error) {
+        console.error('Error fetching user context:', error);
+        return '';
+    }
+}
+
 // Main RAG function - combines retrieval and generation
 export async function ragQuery(
     userMessage: string,
@@ -96,13 +160,20 @@ export async function ragQuery(
     try {
         // 1. Search for relevant documents
         const matches = await searchDocuments(userMessage, userId);
-        const context = buildContext(matches);
+        const docContext = buildContext(matches);
 
-        // 2. Build messages array with system prompt, context, and history
+        // 2. Fetch User Skill Context (Adaptive Learning)
+        let systemContext = SYSTEM_PROMPT + docContext;
+        if (userId) {
+            const userSkillContext = await getUserContext(userId);
+            systemContext += userSkillContext;
+        }
+
+        // 3. Build messages array with system prompt, context, and history
         const messages: ChatMessage[] = [
             {
                 role: 'system',
-                content: SYSTEM_PROMPT + context,
+                content: systemContext,
             },
             ...conversationHistory.slice(-10), // Keep last 10 messages for context
             {
@@ -111,7 +182,7 @@ export async function ragQuery(
             },
         ];
 
-        // 3. Generate response using LLM
+        // 4. Generate response using LLM
         const response = await generateChatCompletion(messages, {
             temperature: 0.7,
             maxTokens: 2048,

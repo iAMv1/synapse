@@ -1,52 +1,195 @@
 @import "tailwindcss";
 
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 @layer base {
+  /* Fonts */
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&family=Nanum+Pen+Script&display=swap');
+
   :root {
-    --background: 0 0% 0%;
-    --foreground: 0 0% 100%;
+    /* Nostalgic Futurism Palette */
+    --bg-primary: #050505;
+    --bg-secondary: #0A0A0A;
+    --bg-elevated: #111111;
+
+    /* Borders */
+    --border-subtle: rgba(255, 255, 255, 0.06);
+    /* Keeping original border values as they were not explicitly removed or replaced in the new palette */
+    --border-default: rgba(255, 255, 255, 0.12);
+    --border-strong: rgba(255, 255, 255, 0.24);
+
+    --accent-primary: #00F0FF;
+    /* Cyber Cyan */
+    --accent-secondary: #7000FF;
+    /* Neural Purple */
+    --accent-tertiary: #FF0055;
+    /* Glitch Pink */
+
+    /* Semantic */
+    --success: #00D48A;
+    --warning: #FFB800;
+    --error: #FF4757;
+
+    /* Text */
+    --text-primary: #FFFFFF;
+    --text-secondary: rgba(255, 255, 255, 0.64);
+    --text-tertiary: rgba(255, 255, 255, 0.40);
   }
 
   body {
-    background-color: black;
-    color: white;
-    font-family: 'Inter', sans-serif;
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    font-family: 'Inter', system-ui, sans-serif;
     -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+    scroll-behavior: smooth;
   }
 
+  /* Smooth scrollbar styling */
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: var(--bg-primary);
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, var(--accent-primary), var(--accent-secondary));
+    border-radius: 4px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--accent-primary);
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  /* Typography Overrides */
   h1,
   h2,
   h3,
   h4,
   h5,
   h6 {
-    font-weight: 700;
-    letter-spacing: -0.025em;
-    color: white;
+    font-family: 'Instrument Serif', Georgia, serif;
+    font-weight: 400;
+    /* Serif looks good at regular weight */
+    letter-spacing: -0.01em;
+  }
+
+  code,
+  pre {
+    font-family: 'JetBrains Mono', monospace;
   }
 
   ::selection {
-    background-color: rgba(16, 185, 129, 0.3);
-    /* emerald-500/30 */
+    background-color: rgba(255, 107, 53, 0.3);
+    /* Orange selection */
+    color: white;
   }
 }
 
-/* Glass Utilities */
 @layer utilities {
-  .glass {
-    background-color: rgba(0, 0, 0, 0.4);
-    backdrop-filter: blur(24px);
-    /* xl */
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+
+  /* Card Styles */
+  .synapse-card {
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border-subtle);
+    border-radius: 1.5rem;
+    /* 24px */
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    /* Spring-like */
   }
 
-  .glass-hover {
-    transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
-    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-    transition-duration: 200ms;
+  .synapse-card:hover {
+    transform: translateY(-4px) scale(1.005);
+    border-color: var(--border-default);
+    box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.5);
   }
 
-  .glass-hover:hover {
-    background-color: rgba(255, 255, 255, 0.05);
+  /* Button Styles */
+  .btn-primary {
+    background: linear-gradient(135deg, var(--accent-primary), var(--accent-tertiary));
+    color: white;
+    box-shadow: 0 4px 20px -5px rgba(255, 107, 53, 0.4);
+    transition: all 0.2s ease;
+  }
+
+  .btn-primary:hover {
+    transform: scale(0.98);
+    opacity: 0.9;
+  }
+
+  .btn-primary:active {
+    transform: scale(0.95);
+  }
+
+  /* Text Gradients */
+  .text-gradient-gold {
+    background: linear-gradient(to right, #FFE259, #FFA751);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .text-gradient-brand {
+    background: linear-gradient(to right, var(--accent-primary), var(--accent-tertiary));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  /* Paper Texture */
+  .bg-paper {
+    background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+  }
+
+  /* Font Utilities */
+  .font-serif {
+    font-family: 'Instrument Serif', Georgia, serif;
+  }
+
+  .font-mono {
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .font-hand {
+    font-family: 'Nanum Pen Script', cursive;
+  }
+}
+
+/* Animations */
+@keyframes tilt {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  25% {
+    transform: rotate(1deg);
+  }
+
+  75% {
+    transform: rotate(-1deg);
+  }
+
+  100% {
+    transform: rotate(0deg);
+  }
+}
+
+@keyframes float {
+  0% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-10px);
+  }
+
+  100% {
+    transform: translateY(0px);
   }
 }

@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { Brain, ArrowRight, Loader2 } from "lucide-react";
-import { GlassCard } from "../../components/ui/GlassCard";
-import { GlassInput } from "../../components/ui/GlassInput";
-import { GlassButton } from "../../components/ui/GlassButton";
+import { SynapseCard } from "../../components/ui/SynapseCard";
+import { SynapseInput } from "../../components/ui/SynapseInput";
+import { SynapseButton } from "../../components/ui/SynapseButton";
 import { supabase } from "../../lib/supabase";
 
 
@@ -37,7 +37,7 @@ export function Login() {
             <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 pointer-events-none" />
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-emerald-500/20 rounded-full blur-[100px] animate-pulse" />
 
-            <GlassCard className="w-full max-w-md relative z-10 mx-4">
+            <SynapseCard className="w-full max-w-md relative z-10 mx-4">
                 <motion.div
                     initial={{ scale: 0.9, opacity: 0 }}
                     animate={{ scale: 1, opacity: 1 }}
@@ -64,17 +64,17 @@ export function Login() {
                         <div className="p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400">
                             Check your email for the magic link.
                         </div>
-                        <GlassButton
+                        <SynapseButton
                             variant="ghost"
                             onClick={() => setSent(false)}
                             className="w-full"
                         >
                             Back to Login
-                        </GlassButton>
+                        </SynapseButton>
                     </motion.div>
                 ) : (
                     <form onSubmit={handleLogin} className="space-y-6">
-                        <GlassInput
+                        <SynapseInput
                             label="Email"
                             type="email"
                             placeholder="architect@synapse.com"
@@ -83,22 +83,16 @@ export function Login() {
                             required
                         />
 
-                        <GlassButton
+                        <SynapseButton
                             type="submit"
                             className="w-full"
-                            disabled={loading}
+                            loading={loading}
                         >
-                            {loading ? (
-                                <Loader2 className="w-5 h-5 animate-spin" />
-                            ) : (
-                                <>
-                                    Connect <ArrowRight className="w-4 h-4 ml-1" />
-                                </>
-                            )}
-                        </GlassButton>
+                            Connect <ArrowRight className="w-4 h-4 ml-1" />
+                        </SynapseButton>
                     </form>
                 )}
-            </GlassCard>
+            </SynapseCard>
         </div>
     );
 }
