@@ -32,3 +32,4 @@ dist-ssr
 
 # Local documentation and notes - not for version control
 .local/
+.agent/
