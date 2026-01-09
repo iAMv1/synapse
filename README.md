@@ -1,73 +1,129 @@
-# React + TypeScript + Vite
+# Synapse - Collaborative Learning Platform
+> *Living Code. Neural Biomimicry. Intelligent Collaboration.*
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Synapse is a next-generation collaborative learning environment built on the **"Big 5" Architectural Pillars**. It combines real-time collaboration, AI-augmented knowledge management (RAG), and a gamified skill progression system wrapped in a unique **"Neural Biomimicry"** aesthetic.
 
-Currently, two official plugins are available:
+![Neural Terminal](https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExMzQ1NjY3ODkw/giphy.gif)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 🚀 Key Features
 
-## React Compiler
+### 1. Neural Biomimicry UI
+- **Living Code Aesthetic:** The interface feels alive with pulsing nodes, typing text effects, and data-grid layouts.
+- **Glassmorphic HUDs:** "Control Pod" headers and translucent panels mimicking futuristic heads-up displays.
+- **Micro-Interactions:** Sci-fi corner accents on cards, breathing gradients, and fluid motion transitions.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### 2. AI-Augmented Brain (RAG)
+- **Bring Your Own Key (BYOK):** Securely use your own OpenRouter/OpenAI keys via Edge Functions.
+- **Document Intelligence:** Upload PDF/MD/TXT files; Synapse parses, chunks, and embeds them for semantic search.
+- **Contextual Chat:** Ask questions about your uploaded documents with source citations.
 
-## Expanding the ESLint configuration
+### 3. Gamification Engine
+- **Skill Tree:** Visualize learning progress as a growing neural network.
+- **XP & Leveling:** Earn experience points for interacting with the AI, uploading documents, and completing quizzes.
+- **Daily Drills:** Quick-fire quizzes to reinforce knowledge.
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### 4. Real-Time Collaboration
+- **Live Presence:** See who is online in your workspace.
+- **Shared Notes:** Collaborative text editing with seamless syncing.
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+---
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+## 🏗 Architecture: The "Big 5"
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+This project strictly adheres to five core pillars to ensure scalability and maintainability:
+
+1.  **Database Schema (The Blueprint):**
+    - Supabase (PostgreSQL) as the single source of truth.
+    - Strict relations for Users, Rooms, Documents, and Embeddings.
+
+2.  **Type Safety (The Inspector):**
+    - End-to-end TypeScript coverage.
+    - Database types generated directly from the schema.
+    - No `any` types allowed.
+
+3.  **State Management (The Traffic Control):**
+    - **Zustand** for global client state (Auth, UI, LLM settings).
+    - **React Query** for server state (caching, invalidation).
+    - **Context API** reserved for strictly local compound components.
+
+4.  **Security (The Bouncer):**
+    - **Row Level Security (RLS):** Database policies ensure users only access their own data.
+    - **Edge Functions:** Secure proxy for AI API keys; keys never exposed to the client.
+
+5.  **Environment Config (The Keys):**
+    - Strict validation of `.env` variables.
+    - Secrets management via Supabase vault.
+
+---
+
+## 🛠 Tech Stack
+
+- **Frontend:** React 18, Vite, TypeScript
+- **Styling:** Tailwind CSS (Custom "Neural" Palette), Framer Motion
+- **Backend / DB:** Supabase (Auth, Database, Storage, Edge Functions, Vector)
+- **AI / LLM:** OpenRouter API (Access to GPT-4, Claude 3.5, Llama 3)
+- **State:** Zustand, key-value storage (local)
+
+---
+
+## ⚡ Getting Started
+
+### Prerequisites
+- Node.js 18+
+- Supabase Account
+- OpenRouter API Key (optional, for AI features)
+
+### Installation
+
+1.  **Clone the repository**
+    ```bash
+    git clone https://github.com/your-username/synapse.git
+    cd synapse
+    ```
+
+2.  **Install dependencies**
+    ```bash
+    npm install
+    ```
+
+3.  **Environment Setup**
+    Create a `.env` file in the root:
+    ```env
+    VITE_SUPABASE_URL=your_supabase_project_url
+    VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
+    ```
+
+4.  **Run Locally**
+    ```bash
+    npm run dev
+    ```
+
+5.  **Build for Production**
+    ```bash
+    npm run build
+    ```
+
+---
+
+## 📂 Project Structure
+
+```
+src/
+├── app/                # Application Routes (Layouts, Pages)
+├── components/         # Reusable UI Components
+│   ├── ui/             # Core primitives (Buttons, Cards, Loaders)
+│   └── navigation/     # Sidebar, Headers
+├── features/           # Feature-based modules
+│   ├── auth/           # Login, Session management
+│   ├── brain/          # Chat, RAG, AI logic
+│   ├── documents/      # Upload, Parsing
+│   └── gamification/   # Skills, XP, Quizzes
+├── hooks/              # Custom React Hooks
+├── lib/                # Utilities (Supabase client, API wrappers)
+├── stores/             # Zustand State Stores
+└── styles/             # Global CSS & Tailwind config
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+---
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+*Built with precision.*
